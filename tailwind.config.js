@@ -17,6 +17,9 @@ export default {
           900: "hsl(202, 55%, 16%)",
         },
       },
+      borderRadius: {
+        "4xl": "84px", // Add a new border radius option
+      },
     },
   },
   plugins: [],
