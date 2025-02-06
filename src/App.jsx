@@ -7,10 +7,10 @@ function App() {
   function handleSubmit() {}
   return (
     <>
-      <div className="flex gap-0 bg-slate-100 h-screen justify-center items-center">
-        <div className="flex bg-white w-1/2 h-3/5 rounded-2xl overflow-hidden">
+      <div className="flex gap-0 bg-slate-100 h-screen justify-center items-center w-screen">
+        <div className="flex bg-white w-1/2 min-h-[61%] rounded-2xl overflow-hidden">
           <div id="repayment-section " className="p-8 w-1/2 h-full">
-            <div className="flex  justify-between">
+            <div className="flex h-10 justify-between">
               <h1 className="font-sans font-bold text-2xl ">
                 Mortgage Calculator
               </h1>
@@ -23,40 +23,81 @@ function App() {
             </div>
             <form
               action="submit"
-              className="flex-col gap-8 mt-4 h-full justify-around text-slate-400"
+              className="flex-col gap-8 mt-4 h-full justify-between text-slate-400"
             >
-              <div>
+              {/* mortgage amount */}
+              <div className="my-6">
                 <label htmlFor="mortgage-amount">Mortgage Amount</label>
-                <input
-                  type="text"
-                  id="mortgage-amount"
-                  className="block w-full outline-slate-500 border border-slate-300 rounded-md py-[8px] px-3 overflow-hidden"
-                />
-                <span className="absolute  bg-slate-100 text-slate-900 py-[0.45rem] px-[0.7rem] -translate-y-[2.5rem] translate-x-[2px] rounded-sm">
-                  $
-                </span>
+                <div className="flex w-full border-slate-300 border overflow-hidden rounded-md cursor-pointer my-2 group-hover:border-slate-600 group-hover:border-2 hover:border-1.5 hover:border-slate-600 focus-within:border-lime focus-within:border-1.5 focus:border-lime parent-has-input-focus">
+                  <span className="bg-slate-100 h-full p-1.5 px-3 text-slate-600 font-bold helper-box">
+                    $
+                  </span>
+                  <input
+                    type="text"
+                    id="mortgage-amount"
+                    className="text-slate-900 font-bold border-none outline-none w-full cursor-pointer px-4 "
+                    required
+                  />
+                </div>
               </div>
-
-              <div>
-                <label htmlFor="mortgage-term">
-                  Mortgage Term
-                  <input id="mortgage-term" type="text" />
-                </label>
-                <label htmlFor="interest-rate">
-                  Interest Rate
-                  <input id="interest-rate" type="text" />
-                </label>
+              {/* mortgage rate and years */}
+              <div className="flex gap-4 w-full my-4">
+                <div className="">
+                  <label htmlFor="mortgage-term">Mortgage Term</label>
+                  <div className="flex gap-2 border-slate-300 border overflow-hidden rounded-md cursor-pointer my-2 parent-has-input-focus group-hover:border-slate-600 group-hover:border-2 hover:border-1.5 hover:border-slate-600 focus-within:border-lime focus-within:border-1.5 focus:border-lime">
+                    <input
+                      className="font-bold outline-none border-none text-slate-900 w-[7.77rem] px-3 inline cursor-pointer"
+                      id="mortgage-term"
+                      type="text"
+                      required
+                    />
+                    <span className="p-1.5 h-full bg-slate-100 px-2 text-slate-600 font-bold helper-box">
+                      years
+                    </span>
+                  </div>
+                </div>
+                <div className="">
+                  <label htmlFor="interest-rate">Interest Rate</label>
+                  <div className="flex gap-2 border-slate-300 border overflow-hidden rounded-md cursor-pointer my-2 parent-has-input-focus group-hover:border-slate-600 group-hover:border-2 hover:border-1.5 hover:border-slate-600 focus-within:border-lime focus-within:border-1.5 focus:border-lime">
+                    <input
+                      className="font-bold outline-none border-none text-slate-900 w-full px-3 cursor-pointer"
+                      id="interest-rate"
+                      type="text"
+                      required
+                    />
+                    <span className="p-1.5 h-full bg-slate-100 px-2 text-slate-600 font-bold helper-box">
+                      %
+                    </span>
+                  </div>
+                </div>
               </div>
-              <div>
-                <span>Mortgage Type</span>
-                <label htmlFor="repayment">
-                  <input type="radio" name="type" />
-                  Repayment
-                </label>
-                <label htmlFor="interest-only">
-                  <input type="radio" name="type" />
-                  Interest Only
-                </label>
+              {/* mortgage type */}
+              <div className="my-4">
+                <span className="">Mortgage Type</span>
+                <div className="block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime">
+                  <input
+                    type="radio"
+                    id="mortgage-type"
+                    name="type"
+                    required
+                    className="mx-2 cursor-pointer"
+                  />
+                  <label htmlFor="mortgage-type" className="cursor-pointer">
+                    Repayment
+                  </label>
+                </div>
+                <div className="block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime">
+                  <input
+                    type="radio"
+                    name="type"
+                    id="interest-only"
+                    required
+                    className="mx-2 cursor-pointer"
+                  />
+                  <label htmlFor="interest-only" className="cursor-pointer">
+                    Interest Only
+                  </label>
+                </div>
               </div>
               <button
                 onSubmit={handleSubmit}

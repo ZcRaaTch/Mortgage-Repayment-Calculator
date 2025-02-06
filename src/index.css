@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer utilities {
+  .parent-has-input-focus:has(input:focus) .helper-box {
+    background-color: hsl(61, 70%, 52%);
+  }
+}
