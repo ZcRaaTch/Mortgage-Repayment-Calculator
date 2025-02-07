@@ -2,8 +2,31 @@ import { useState } from "react";
 import illustrationImg from "./assets/images/illustration-empty.svg";
 
 function App() {
-  const [count, setCount] = useState(0);
-  function handleClear() {}
+  const [amount, setAmount] = useState("");
+  const [years, setYears] = useState("");
+  const [rate, setRate] = useState("");
+  // handling change in rate input for valid value of rate
+  const handleChange = (e) => {
+    let val = e.target.value;
+
+    // Allow only numbers and a single decimal
+    if (!/^\d*\.?\d*$/.test(val)) return;
+
+    // Restrict to 2 decimal places
+    if (val.includes(".")) {
+      let [int, decimal] = val.split(".");
+      if (decimal?.length > 2) {
+        val = int + "." + decimal.slice(0, 2);
+      }
+    }
+    setRate(val);
+  };
+  // handling clear button to reset all the values
+  function handleClear() {
+    setAmount("");
+    setYears("");
+    setRate("");
+  }
   function handleSubmit() {}
   return (
     <>
@@ -33,9 +56,11 @@ function App() {
                     $
                   </span>
                   <input
-                    type="text"
+                    type="number"
+                    value={amount}
+                    onChange={(e) => setAmount(e.target.value)}
                     id="mortgage-amount"
-                    className="text-slate-900 font-bold border-none outline-none w-full cursor-pointer px-4 "
+                    className="text-slate-900 font-bold border-none outline-none w-full cursor-pointer px-4 appearance-none"
                     required
                   />
                 </div>
@@ -46,9 +71,12 @@ function App() {
                   <label htmlFor="mortgage-term">Mortgage Term</label>
                   <div className="flex gap-2 border-slate-300 border overflow-hidden rounded-md cursor-pointer my-2 parent-has-input-focus group-hover:border-slate-600 group-hover:border-2 hover:border-1.5 hover:border-slate-600 focus-within:border-lime focus-within:border-1.5 focus:border-lime">
                     <input
-                      className="font-bold outline-none border-none text-slate-900 w-[7.77rem] px-3 inline cursor-pointer"
+                      className="font-bold outline-none border-none text-slate-900 w-[7.77rem] px-3 inline cursor-pointer appearance-none"
                       id="mortgage-term"
-                      type="text"
+                      type="number"
+                      value={years}
+                      onChange={(e) => setYears(e.target.value)}
+                      pattern="[0-9]"
                       required
                     />
                     <span className="p-1.5 h-full bg-slate-100 px-2 text-slate-600 font-bold helper-box">
@@ -60,9 +88,11 @@ function App() {
                   <label htmlFor="interest-rate">Interest Rate</label>
                   <div className="flex gap-2 border-slate-300 border overflow-hidden rounded-md cursor-pointer my-2 parent-has-input-focus group-hover:border-slate-600 group-hover:border-2 hover:border-1.5 hover:border-slate-600 focus-within:border-lime focus-within:border-1.5 focus:border-lime">
                     <input
-                      className="font-bold outline-none border-none text-slate-900 w-full px-3 cursor-pointer"
+                      className="font-bold outline-none border-none text-slate-900 w-full px-3 cursor-pointer appearance-none"
                       id="interest-rate"
-                      type="text"
+                      type="number"
+                      value={rate}
+                      onChange={handleChange}
                       required
                     />
                     <span className="p-1.5 h-full bg-slate-100 px-2 text-slate-600 font-bold helper-box">
