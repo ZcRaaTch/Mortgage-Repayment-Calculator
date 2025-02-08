@@ -5,6 +5,9 @@ function App() {
   const [amount, setAmount] = useState("");
   const [years, setYears] = useState("");
   const [rate, setRate] = useState("");
+  const [type, setType] = useState("");
+  const [result, setResult] = useState("");
+  const [total, setTotal] = useState("");
   // handling change in rate input for valid value of rate
   const handleChange = (e) => {
     let val = e.target.value;
@@ -21,13 +24,45 @@ function App() {
     }
     setRate(val);
   };
+  const handleTypeChange = (e) => {
+    setType(e);
+  };
   // handling clear button to reset all the values
   function handleClear() {
     setAmount("");
     setYears("");
     setRate("");
+    setType("");
+    setResult("");
+    setTotal("");
   }
-  function handleSubmit() {}
+  function handleSubmit(e) {
+    e.preventDefault();
+    if (!amount || !years || !rate) return;
+
+    const P = parseFloat(amount);
+
+    if (type === "repayment") {
+      const r = parseFloat(rate) / 100 / 12;
+      const n = parseInt(years) * 12;
+      const M = (P * r * (1 + r) ** n) / ((1 + r) ** n - 1);
+      setResult(M.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+      // console.log(M.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+
+      const tm = M * n;
+      // console.log(tm.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+      setTotal(tm.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+    } else if (type === "interest") {
+      const r = parseFloat(rate) / 100;
+      const t = parseInt(years);
+      const M = (P * r) / 12;
+      setResult(M.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+      // console.log(M.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+      const tm = P + M * t * 12;
+      // console.log(tm.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+      setTotal(tm.toLocaleString("en-US", { minimumFractionDigits: 2 }));
+    }
+  }
   return (
     <>
       <div className="flex gap-0 bg-slate-100 h-screen justify-center items-center w-screen">
@@ -46,6 +81,7 @@ function App() {
             </div>
             <form
               action="submit"
+              onSubmit={handleSubmit}
               className="flex-col gap-8 mt-4 h-full justify-between text-slate-400"
             >
               {/* mortgage amount */}
@@ -104,35 +140,58 @@ function App() {
               {/* mortgage type */}
               <div className="my-4">
                 <span className="">Mortgage Type</span>
-                <div className="block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime">
+                <div
+                  className={`block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime ${
+                    type === "repayment"
+                      ? "border-lime bg-lime bg-opacity-30"
+                      : "border-slate-300"
+                  }`}
+                  onClick={() => handleTypeChange("repayment")}
+                >
                   <input
                     type="radio"
                     id="mortgage-type"
                     name="type"
+                    value="repayment"
+                    checked={type === "repayment"}
                     required
-                    className="mx-2 cursor-pointer"
+                    onChange={() => {}}
+                    className="mx-2 cursor-pointer "
                   />
-                  <label htmlFor="mortgage-type" className="cursor-pointer">
+                  <label
+                    htmlFor="mortgage-type"
+                    className="cursor-pointer w-full text-slate-900 font-bold"
+                  >
                     Repayment
                   </label>
                 </div>
-                <div className="block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime">
+                <div
+                  className={`block border border-slate-300 p-2.5 rounded-md my-2 cursor-pointer hover:border-lime ${
+                    type === "interest"
+                      ? "border-lime bg-lime bg-opacity-30"
+                      : "border-slate-300"
+                  }`}
+                  onClick={() => handleTypeChange("interest")}
+                >
                   <input
                     type="radio"
                     name="type"
                     id="interest-only"
+                    value="interest"
+                    checked={type === "interest"}
                     required
-                    className="mx-2 cursor-pointer"
+                    onChange={() => {}}
+                    className="peer mx-2 cursor-pointer "
                   />
-                  <label htmlFor="interest-only" className="cursor-pointer">
+                  <label
+                    htmlFor="interest-only"
+                    className="cursor-pointer w-full text-slate-900 font-bold"
+                  >
                     Interest Only
                   </label>
                 </div>
               </div>
-              <button
-                onSubmit={handleSubmit}
-                className="bg-lime font-bold w-2/3 p-2 flex rounded-3xl justify-center gap-2 text-slate-950"
-              >
+              <button className="bg-lime font-bold w-2/3 p-2 flex rounded-3xl justify-center gap-2 text-slate-950">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -152,16 +211,44 @@ function App() {
           {/* result section starts here */}
           <div
             id="results-section"
-            className="bg-slate-800 w-1/2 rounded-bl-4xl p-4"
+            className="bg-slate-900 w-1/2 rounded-bl-4xl p-5"
           >
-            <img src={illustrationImg} className="mx-auto mt-14" />
-            <h1 className="text-white text-center font-bold text-2xl my-2">
-              Results shown here
-            </h1>
-            <p className="text-slate-300 text-center text-sm mx-8">
-              Complete the form and click “calculate repayments” to see what
-              your monthly repayments would be.
-            </p>
+            {result ? (
+              <div>
+                <h1 className="text-white font-bold text-2xl my-2">
+                  Your results
+                </h1>
+                <p className="text-slate-400 text-sm my-4">
+                  Your results Your results are shown below based on the
+                  information you provided. To adjust the results, edit the form
+                  and click “calculate repayments” again.
+                </p>
+                <div className="bg-slate-800 border-t-lime border-t-4 rounded-md w-full p-8 my-10">
+                  <p className="text-slate-400 text-sm">
+                    Your monthly repayments
+                  </p>
+                  <p className="text-lime font-bold text-5xl my-3">
+                    $ {result}
+                  </p>
+                  <hr className="bg-slate-400 border-0 my-8 h-px" />
+                  <p className="text-slate-400 text-sm my-4">
+                    Total you'll repay over the term
+                  </p>
+                  <p className="text-slate-200 font-bold text-lg">$ {total}</p>
+                </div>
+              </div>
+            ) : (
+              <div className="">
+                <img src={illustrationImg} className="mx-auto mt-14" />
+                <h1 className="text-white text-center font-bold text-2xl my-2">
+                  Results shown here
+                </h1>
+                <p className="text-slate-400 text-center text-sm mx-8">
+                  Complete the form and click “calculate repayments” to see what
+                  your monthly repayments would be.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>
